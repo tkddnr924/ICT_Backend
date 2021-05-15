@@ -20,7 +20,50 @@ class CarHelper {
         })
     }
 
-    async statistic_day () {}
+    async statistic_day () {
+        const today = new Date()
+        today.setHours(9,0,0,0)
+
+        const tomorrow = new Date(today)
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        tomorrow.setHours(9,0,0,0)
+
+        return await CarModel.aggregate([
+            {
+                $match: {
+                    type: "INPUT"
+                }
+            },
+            {
+                $match: {
+                    time: {
+                        $gte: today,
+                        $lte: tomorrow,
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: {hour: { $hour: '$time' }},
+                    count: {
+                        $sum: 1
+                    }
+                }
+            },
+            {
+                $project: {
+                    count: 1,
+                    hour: '$_id.hour',
+                    _id: 0
+                }
+            },
+            {
+                $sort: {
+                    hour: 1
+                }
+            }
+        ]).exec()
+    }
 }
 
 module.exports = CarHelper

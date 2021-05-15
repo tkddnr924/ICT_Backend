@@ -23,6 +23,12 @@ class CarServices {
 
         return result
     }
+
+    async market_day () {
+        const result = await this.helper.statistic_day()
+
+        return { status: true, data: result }
+    }
 }
 
 

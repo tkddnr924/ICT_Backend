@@ -2,6 +2,7 @@ const router = require('express-promise-router')();
 
 const carRoute = require('./car')
 const parkRoute = require('./park')
+const marketRoute = require('./market')
 
 router.get('/', (req, res, next) => {
   res.json({
@@ -15,5 +16,6 @@ router.get('/', (req, res, next) => {
 
 router.use('/car', carRoute)
 router.use('/park', parkRoute)
+router.use('/market', marketRoute)
 
 module.exports = router;
