@@ -8,11 +8,10 @@ const winston = require('./utils/winston')
 const init = server => {
   server.use(cors(
       {
-        origin: ['*'],
-        methods:['POST','GET','PUT','DELETE','PATCH'],
+        methods: ['POST','GET','PUT','DELETE','PATCH'],
         credentials: true,
-        allowedHeaders:['Origin','X-Requested-With','Content-Type','Accept','Authorization'],
-        withCredentials:true
+        allowedHeaders: ['Origin','X-Requested-With','Content-Type','Accept','Authorization'],
+        withCredentials: true
       }
   ))
 
