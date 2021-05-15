@@ -8,7 +8,7 @@ const winston = require('./utils/winston')
 const init = server => {
   server.use(cors(
       {
-        origin: ['http://localhost','http://localhost:8080','http://localhost:8000'],
+        origin: ['http://localhost','http://localhost:8080','http://localhost:8000', 'https://ictfront.herokuapp.com'],
         methods:['POST','GET','PUT','DELETE','PATCH'],
         credentials: true,
         allowedHeaders:['Origin','X-Requested-With','Content-Type','Accept','Authorization'],
