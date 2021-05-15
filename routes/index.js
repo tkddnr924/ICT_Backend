@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const router = require('express-promise-router')();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.get('/', (req, res, next) => {
+  res.json({
+    success: true,
+    message: "welcome index",
+    data: {
+      version: "1.0.0"
+    }
+  })
+})
 
 module.exports = router;

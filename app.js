@@ -1,41 +1,53 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const config = require('./cfg/index')
+const winston = require('./utils/winston')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const init = server => {
+  server.use(cors(
+      {
+        origin: ['http://localhost','http://localhost:8080','http://localhost:8000'],
+        methods:['POST','GET','PUT','DELETE','PATCH'],
+        credentials: true,
+        allowedHeaders:['Origin','X-Requested-With','Content-Type','Accept','Authorization'],
+        withCredentials:true
+      }
+  ))
 
-var app = express();
+  server.use(bodyParser.json()) // support json encoded bodies
+  server.use(bodyParser.urlencoded({ extended: true })) // support encoded bodies
+  server.use(cookieParser())
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+  const mainRouter = require('./routes')
+  server.use('/', mainRouter)
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+  server.use((req,res,next)=>[
+    res.status(404).json({message:"PageNotFound"}).end()
+  ])
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+  server.use((err, req, res, next) => {
+    const ip = req.headers['x-forwarded-for'] ||  req.connection.remoteAddress;
+    winston.error(String(ip)+' - ' + String(err))
+    res
+        .status(500)
+        .json({
+          message:
+              "예상치 못한 오류가 발생했습니다",
+        })
+        .end()
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+    next(err)
+  })
+  return server;
+};
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+const server = express()
+const app = init(server)
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+server.listen(config.port,'0.0.0.0', () => {
+  winston.info(`> Ready on http://localhost:${config.port}`)
+})
 
 module.exports = app;
