@@ -1,5 +1,8 @@
 const router = require('express-promise-router')();
 
+const carRoute = require('./car')
+const parkRoute = require('./park')
+
 router.get('/', (req, res, next) => {
   res.json({
     success: true,
@@ -9,5 +12,8 @@ router.get('/', (req, res, next) => {
     }
   })
 })
+
+router.use('/car', carRoute)
+router.use('/park', parkRoute)
 
 module.exports = router;

@@ -46,6 +46,14 @@ const init = server => {
 const server = express()
 const app = init(server)
 
+// mongo db
+const { connect, initSchemas } = require('./models');
+
+(async () => {
+    await connect()
+    initSchemas()
+})();
+
 server.listen(config.port,'0.0.0.0', () => {
   winston.info(`> Ready on http://localhost:${config.port}`)
 })
