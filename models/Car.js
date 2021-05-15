@@ -21,8 +21,7 @@ const carSchema = new Schema({
     },
     time: {
         type: Date,
-        required: true,
-        default: moment().format(defaultTimeFormat)
+        required: true
     }
 })
 

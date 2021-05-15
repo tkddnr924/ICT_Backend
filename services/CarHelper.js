@@ -1,12 +1,14 @@
 const CarModel = require('../models/Car')
+const moment = require('moment-timezone')
 
 class CarHelper {
-
     async add_car_data (park, time, type) {
+
+        const newTime = moment.tz(time, 'Asia/Seoul').utc(9)
         const car = new CarModel({
             type: type,
             park_num: park,
-            time: new Date(time)
+            time: newTime
         })
 
         const message = "[SUCCESS]" + type + " Car at " + time
@@ -17,6 +19,8 @@ class CarHelper {
             return { status: false }
         })
     }
+
+    async statistic_day () {}
 }
 
 module.exports = CarHelper
