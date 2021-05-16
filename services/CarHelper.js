@@ -35,14 +35,6 @@ class CarHelper {
                 }
             },
             {
-                $match: {
-                    time: {
-                        $gte: today,
-                        $lte: tomorrow,
-                    }
-                }
-            },
-            {
                 $group: {
                     _id: {hour: { $hour: '$time' }},
                     count: {
